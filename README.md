@@ -2,4 +2,5 @@
 
 * CPU
 * Memory
+* Internet bandwidth (+ Rough region)
 
