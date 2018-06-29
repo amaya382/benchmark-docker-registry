@@ -1,6 +1,7 @@
 # Print docker registry env
 
 * CPU
-* Memory
-* Internet bandwidth (+ Rough region)
+* Memory Size
+* Internet Bandwidth (+ Rough region)
+* Disk IO
 

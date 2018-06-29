@@ -3,11 +3,42 @@ FROM ubuntu:18.04
 LABEL maintainer='amaya <mail@sapphire.in.net>'
 
 RUN apt update && \
-    apt install -y wget && \
+    apt install -y wget python fio && \
     wget https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py -O speedtest-cli && \
     chmod +x speedtest-cli && \
-    (lscpu && free -m && ./speedtest-cli) | tee /root/results && \
-    `# Delete garbage` \
+    ( \
+      \
+      `### CPU ###` \
+      lscpu && \
+      \
+      `### Memory Size ###` \
+      free -m && \
+      \
+      `### Internet Bandwidth ##` \
+      ./speedtest-cli && \
+      \
+      `### Disk IO ###` \
+      fio -filename=/tmp/test -direct=1 -rw=read -bs=4k -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=SeqRead4k && \
+      fio -filename=/tmp/test -direct=1 -rw=write -bs=4k -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=SeqWrite4k && \
+      fio -filename=/tmp/test -direct=1 -rw=randread -bs=4k -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=RandRead4k && \
+      fio -filename=/tmp/test -direct=1 -rw=randwrite -bs=4k -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=RandWrite4k && \
+      fio -filename=/tmp/test -direct=1 -rw=read -bs=32m -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=SeqRead32m && \
+      fio -filename=/tmp/test -direct=1 -rw=write -bs=32m -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=SeqWrite32m && \
+      fio -filename=/tmp/test -direct=1 -rw=randread -bs=32m -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=RandRead32m && \
+      fio -filename=/tmp/test -direct=1 -rw=randwrite -bs=32m -size=2G \
+        -numjobs=64 -runtime=10 -group_reporting -name=RandWrite32m \
+    ) | tee /root/results && \
+    \
+    `### Delete garbage ###` \
     apt clean && \
-    rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+    rm -rf /var/cache/apt/archives/* \
+      /var/lib/apt/lists/* \
+      /tmp/test
 
