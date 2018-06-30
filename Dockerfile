@@ -13,6 +13,7 @@ RUN apt update && \
       free -m && \
       \
       `### Memory Bandwidth ###` \
+      wget https://www.cs.virginia.edu/stream/FTP/Code/stream.c && \
       clang -fopenmp -DSTREAM_ARRAY_SIZE=50000000 stream.c -o stream && \
       ./stream && \
       \
