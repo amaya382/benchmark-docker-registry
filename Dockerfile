@@ -21,7 +21,8 @@ RUN ( \
       \
       `### Internet Bandwidth ###` \
       wget -q https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py && \
-      python speedtest.py && \
+      python speedtest.py --csv-header && \
+      python speedtest.py --csv && \
       \
       `### Disk IO ###` \
       fio -filename=/tmp/test -direct=1 -rw=read -bs=4k -size=2G \
